@@ -53,4 +53,10 @@ public class TutorsRestController {
 	public void deleteTutor(@PathVariable long id) {
 		tutorsService.deleteTutor(id);
 	}
+	
+	@GetMapping("/tutors/{name}/{surname}")
+	public List<Tutor> getTutorsByNameAndSurname(@PathVariable("name") String name, @PathVariable("surname") String surname) {
+		return tutorsService.getTutorsByNameAndSurname(name, surname);
+	}
+	
 }
