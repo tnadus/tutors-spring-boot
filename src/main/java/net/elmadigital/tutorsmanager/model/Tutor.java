@@ -5,6 +5,8 @@ public class Tutor {
 	private long id;
 	private String name;
 	private String surname;
+	
+	@Email
 	private String email;
 	
 	private String[] expertizeAreas;

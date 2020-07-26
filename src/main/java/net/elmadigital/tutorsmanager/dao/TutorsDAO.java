@@ -3,6 +3,7 @@ package net.elmadigital.tutorsmanager.dao;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 
@@ -31,30 +32,6 @@ public class TutorsDAO {
 				.findFirst()
 				.orElseThrow(TutorNotFoundException::new);
 	}
-
-	//region addTutor
-	
-	public void addTutor(Tutor tutor) {
-		tutors.stream()
-		.filter(tut -> tut.getId() == tutor.getId())
-		.findAny()
-		.ifPresent(nonEmpty -> { 
-			throw new TutorAlreadyExistedException();
-		});
-		tutors.add(tutor);
-	}
-	
-	public void addTutor2(Tutor tutor) {
-		tutors.stream()
-		.filter(tut -> tut.getId() == tutor.getId())
-		.reduce(new BinaryOperator<Tutor>() {
-			@Override
-			public Tutor apply(Tutor t, Tutor u) {
-				throw new TutorAlreadyExistedException();
-			}
-		});
-		tutors.add(tutor);
-	}
 	
 	public void addTutor3(Tutor tutor) {
 		tutors.stream()
@@ -66,8 +43,6 @@ public class TutorsDAO {
 		tutors.add(tutor);
 	}
 	
-	//region End
-
 	public Tutor updateTutor(Tutor tutor, long id) {
 		Tutor tutorFound = getTutor(id);
 		tutorFound.setName(tutor.getName());
@@ -82,9 +57,11 @@ public class TutorsDAO {
 		tutors.remove(tutor);
 	}
 
-	public List<Tutor> getTutorsByNameAndSurname(String name, String surname) {
-		return tutors.stream()
-				.filter(tut -> (tut.getName().equalsIgnoreCase(name)) && (tut.getSurname().equalsIgnoreCase(surname)))
-				.collect(Collectors.toList());	
+	public List<Tutor> getTutorsByNameAndSurname(String name, String surname) {		
+		return Optional.of(tutors.stream()
+                .filter(tut -> (tut.getName().equalsIgnoreCase(name)) && (tut.getSurname().equalsIgnoreCase(surname)))
+                .collect(Collectors.toList()))
+                .filter(list -> !list.isEmpty())
+                .orElseThrow(TutorNotFoundException::new);
 	}
 }
