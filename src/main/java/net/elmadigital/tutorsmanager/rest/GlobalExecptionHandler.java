@@ -1,10 +1,11 @@
 package net.elmadigital.tutorsmanager.rest;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.Arrays;
+
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -25,6 +26,12 @@ public class GlobalExecptionHandler {
 	public final ResponseEntity<TutorResponseError> handleTutorAlreadyExistedException(TutorAlreadyExistedException exc) {
 		TutorResponseError error = new TutorResponseError(HttpStatus.CONFLICT, "Tutor already existed, sorry!", System.currentTimeMillis());
 		return new ResponseEntity<>(error, error.getStatusCode());
+	}
+	
+	@ExceptionHandler
+	public final ResponseEntity<TutorResponseError> handleTutorArgumentNotValidException(MethodArgumentNotValidException exc) {
+		TutorResponseError error = new TutorResponseError(HttpStatus.BAD_REQUEST, exc.getMessage(), System.currentTimeMillis());
+		return new ResponseEntity<TutorResponseError>(error, error.getStatusCode());
 	}
 
 }

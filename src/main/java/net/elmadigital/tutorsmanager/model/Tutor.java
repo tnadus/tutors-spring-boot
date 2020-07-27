@@ -1,12 +1,19 @@
 package net.elmadigital.tutorsmanager.model;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+
 public class Tutor {
 	
 	private long id;
+	
+	@NotEmpty(message = "Name should not be empty")
 	private String name;
+	
+	@NotEmpty(message = "Surname should not be empty")
 	private String surname;
 	
-	@Email
+	@Email(message = "Email should be valid")
 	private String email;
 	
 	private String[] expertizeAreas;

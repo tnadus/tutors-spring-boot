@@ -33,7 +33,7 @@ public class TutorsDAO {
 				.orElseThrow(TutorNotFoundException::new);
 	}
 	
-	public void addTutor3(Tutor tutor) {
+	public void addTutor(Tutor tutor) {
 		tutors.stream()
 		.filter(tut -> tut.getId() == tutor.getId())
 		.reduce((tutor1, tutor2) -> {

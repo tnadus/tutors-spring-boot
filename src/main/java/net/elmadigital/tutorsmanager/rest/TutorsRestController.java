@@ -2,6 +2,8 @@ package net.elmadigital.tutorsmanager.rest;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,14 +38,14 @@ public class TutorsRestController {
 	
 	@PostMapping("/tutors")
 	@ResponseStatus(HttpStatus.CREATED)
-	public Tutor addTutor(@RequestBody Tutor tutor) {
+	public Tutor addTutor(@Valid @RequestBody Tutor tutor) {
 		tutorsService.addTutor(tutor);
 		return tutor;
 	}
 	
 	@PutMapping("/tutors/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public Tutor updateTutor(@RequestBody Tutor tutor, @PathVariable long id) {
+	public Tutor updateTutor(@Valid @RequestBody Tutor tutor, @PathVariable long id) {
 		return tutorsService.updateTutor(tutor, id);
 		
 	}
