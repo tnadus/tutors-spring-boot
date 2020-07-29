@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
@@ -17,10 +16,10 @@ import net.elmadigital.tutorsmanager.model.Tutor;
 public class TutorsDAO {
 
 	private List<Tutor> tutors = new ArrayList<>(Arrays.asList(
-			new Tutor(0, "John", "Cooper", "john_cooper@gmail.com", new String[]{"iOS", "Android", "Java"}),
-			new Tutor(1, "Victor", "Palmer", "victorpalmer@yahoo.com", new String[]{"Java", "Spring"}),
-			new Tutor(2, "Sally", "Simson", "sally_sims@yahoo.com", new String[]{"Word", "Excel"}),
-			new Tutor(3, "Ali", "Tatar", "alitatar@gmail.com", new String[]{"Oracle", "Java"})));
+			new Tutor(0, "John", "Cooper", "john_cooper@gmail.com", "AB12CD", new String[]{"iOS", "Android", "Java"}),
+			new Tutor(1, "Victor", "Palmer", "victorpalmer@yahoo.com", "WW99AA", new String[]{"Java", "Spring"}),
+			new Tutor(2, "Sally", "Simson", "sally_sims@yahoo.com", "XX55YY", new String[]{"Word", "Excel"}),
+			new Tutor(3, "Ali", "Tatar", "alitatar@gmail.com", "OO11PP", new String[]{"Oracle", "Java"})));
 	
 	public List<Tutor> getAllTutors() {
 		return tutors;

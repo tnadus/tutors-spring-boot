@@ -57,6 +57,7 @@ public class TutorsRestController {
 	}
 	
 	@GetMapping("/tutors/{name}/{surname}")
+	@ResponseStatus(HttpStatus.OK)
 	public List<Tutor> getTutorsByNameAndSurname(@PathVariable("name") String name, @PathVariable("surname") String surname) {
 		return tutorsService.getTutorsByNameAndSurname(name, surname);
 	}

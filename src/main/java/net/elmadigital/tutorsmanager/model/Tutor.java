@@ -2,6 +2,7 @@ package net.elmadigital.tutorsmanager.model;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 
 public class Tutor {
 	
@@ -18,16 +19,25 @@ public class Tutor {
 	
 	private String[] expertizeAreas;
 	
-	//Constructors
+	@Pattern(regexp = "^[a-zA-Z0-9]{6}", message = "postcode should be 6chars/digits")
+	private String postcode;
 	
+	//Constructors
+
 	public Tutor() {}
 
-	public Tutor(long id, String name, String surname, String email, String[] expertizeAreas) {
+	public Tutor(long id, 
+			String name, 
+			String surname, 
+			String email, 
+			String postcode,
+			String[] expertizeAreas) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.surname = surname;
 		this.email = email;
+		this.postcode = postcode;
 		this.expertizeAreas = expertizeAreas;
 	}
 	
@@ -71,6 +81,14 @@ public class Tutor {
 
 	public void setExpertizeAreas(String[] expertizeAreas) {
 		this.expertizeAreas = expertizeAreas;
+	}
+		
+	public String getPostcode() {
+		return postcode;
+	}
+
+	public void setPostcode(String postcode) {
+		this.postcode = postcode;
 	}
 
 }
