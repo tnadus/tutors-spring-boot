@@ -4,6 +4,9 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
+import ch.qos.logback.classic.layout.TTLLLayout;
+import net.elmadigital.tutorsmanager.validator.TutCode;
+
 public class Tutor {
 	
 	private long id;
@@ -22,6 +25,9 @@ public class Tutor {
 	@Pattern(regexp = "^[a-zA-Z0-9]{6}", message = "postcode should be 6chars/digits")
 	private String postcode;
 	
+	@TutCode
+	private String tutCode;
+	
 	//Constructors
 
 	public Tutor() {}
@@ -31,7 +37,8 @@ public class Tutor {
 			String surname, 
 			String email, 
 			String postcode,
-			String[] expertizeAreas) {
+			String[] expertizeAreas,
+			String tutCode) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -39,6 +46,7 @@ public class Tutor {
 		this.email = email;
 		this.postcode = postcode;
 		this.expertizeAreas = expertizeAreas;
+		this.tutCode = tutCode;
 	}
 	
 	//Getters & Setters
@@ -90,5 +98,12 @@ public class Tutor {
 	public void setPostcode(String postcode) {
 		this.postcode = postcode;
 	}
+	
+	public String getTutCode() {
+		return tutCode;
+	}
 
+	public void setTutCode(String tutCode) {
+		this.tutCode = tutCode;
+	}
 }
