@@ -15,31 +15,31 @@ import net.elmadigital.tutorsmanager.model.Tutor;
 @Repository
 public class TutorsDAO {
 
-	private List<Tutor> tutors = new ArrayList<>(Arrays.asList(
+	public static final List<Tutor> TUTORS = new ArrayList<>(Arrays.asList(
 			new Tutor(0, "John", "Cooper", "john_cooper@gmail.com", "AB12CD", new String[]{"iOS", "Android", "Java"}, "TUT-001"),
 			new Tutor(1, "Victor", "Palmer", "victorpalmer@yahoo.com", "WW99AA", new String[]{"Java", "Spring"}, "TUT-211"), 
 			new Tutor(2, "Sally", "Simson", "sally_sims@yahoo.com", "XX55YY", new String[]{"Word", "Excel"}, "TUT-591"),
 			new Tutor(3, "Ali", "Tatar", "alitatar@gmail.com", "OO11PP", new String[]{"Oracle", "Java"}, "TUT-999")));
 	
 	public List<Tutor> getAllTutors() {
-		return tutors;
+		return TUTORS;
 	}
 
 	public Tutor getTutor(long id) {
-		return tutors.stream()
+		return TUTORS.stream()
 				.filter(tut -> tut.getId() == id)
 				.findFirst()
 				.orElseThrow(TutorNotFoundException::new);
 	}
 	
 	public void addTutor(Tutor tutor) {
-		tutors.stream()
+		TUTORS.stream()
 		.filter(tut -> tut.getId() == tutor.getId())
 		.reduce((tutor1, tutor2) -> {
 			//accumulation function is called to operate if has more than 1 element
 			throw new TutorAlreadyExistedException();
 		});
-		tutors.add(tutor);
+		TUTORS.add(tutor);
 	}
 	
 	public Tutor updateTutor(Tutor tutor, long id) {
@@ -53,11 +53,11 @@ public class TutorsDAO {
 
 	public void deleteTutor(long id) {
 		Tutor tutor = getTutor(id);
-		tutors.remove(tutor);
+		TUTORS.remove(tutor);
 	}
 
 	public List<Tutor> getTutorsByNameAndSurname(String name, String surname) {		
-		return Optional.of(tutors.stream()
+		return Optional.of(TUTORS.stream()
                 .filter(tut -> (tut.getName().equalsIgnoreCase(name)) && (tut.getSurname().equalsIgnoreCase(surname)))
                 .collect(Collectors.toList()))
                 .filter(list -> !list.isEmpty())
