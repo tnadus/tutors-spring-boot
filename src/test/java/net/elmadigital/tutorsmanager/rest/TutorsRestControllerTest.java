@@ -2,15 +2,14 @@ package net.elmadigital.tutorsmanager.rest;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.internal.matchers.Any;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -22,8 +21,6 @@ import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-
-import java.util.Arrays;
 
 import net.elmadigital.tutorsmanager.dao.TutorsDAO;
 import net.elmadigital.tutorsmanager.exception.TutorNotFoundException;
@@ -115,6 +112,49 @@ public class TutorsRestControllerTest {
 		.andExpect(MockMvcResultMatchers.jsonPath("$.expertizeAreas[1]", is("Mock102")));
 		
 		verify(tutorsService, times(1)).addTutor(any());
+	}
+	
+	@Test
+	public void postNonExistedEmptyNameTutorThrowsMethodArgumentNotValidException() throws Exception {
+		
+		Tutor tutor = new Tutor(4, "", 
+				"mock_surname", 
+				"mock_email@gmail.com", 
+				"MM00CK", 
+				new String[]{"Mock101", "Mock102"}, 
+				"TUT-123");
+		
+		String tutorJson = mapToJson(tutor);
+		mockMvc.perform(post("/tutors")
+				.contentType(MediaType.APPLICATION_JSON_VALUE)
+				.content(tutorJson))
+		.andDo(print())
+		.andExpect(status().isBadRequest());
+		
+		verify(tutorsService, times(0)).addTutor(any());
+		
+	}
+	
+	@Test
+	public void postNonExistedInvalidPostcodeTutorThrowsMethodArgumentNotValidException() throws Exception {
+		
+		Tutor tutor = new Tutor(4, "", 
+				"mock_surname", 
+				"mock_email@gmail.com", 
+				"ABC00", 
+				new String[]{"Mock101", "Mock102"}, 
+				"TUT-123");
+		
+		String tutorJson = mapToJson(tutor);
+		mockMvc.perform(post("/tutors")
+				.contentType(MediaType.APPLICATION_JSON_VALUE)
+				.content(tutorJson))
+		.andDo(print())
+		.andExpect(status().isBadRequest())
+		.andExpect(MockMvcResultMatchers.jsonPath("$").exists())
+		.andExpect(MockMvcResultMatchers.jsonPath("$.statusCode", is("BAD_REQUEST")));
+				
+		verify(tutorsService, times(0)).addTutor(any());
 	}
 	
 }
