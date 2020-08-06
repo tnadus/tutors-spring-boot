@@ -2,13 +2,19 @@ package net.elmadigital.tutorsmanager.rest;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.internal.matchers.Any;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -33,6 +39,16 @@ public class TutorsRestControllerTest {
 	
 	@MockBean
 	private TutorsService tutorsService;
+	
+	protected String mapToJson(Object object) throws JsonProcessingException {
+		ObjectMapper objectMapper = new ObjectMapper();
+		return objectMapper.writeValueAsString(object);
+	}
+	
+	protected <T> T jsonToObject(String jsonString, Class<T> classType) throws JsonMappingException, JsonProcessingException {
+		ObjectMapper objectMapper = new ObjectMapper();
+		return objectMapper.readValue(jsonString, classType);
+	}
 	
 	@Test
 	public void getAllTutorsShouldReturnTutors() throws Exception {
@@ -73,6 +89,32 @@ public class TutorsRestControllerTest {
 		.andExpect(status().isNotFound());
 		
 		verify(tutorsService, times(1)).getTutor(0);
+	}
+	
+	@Test
+	public void postNonExistedValidTutorReturnsHttpCreated() throws Exception {
+		
+		Tutor tutor = new Tutor(4, "mock_name", 
+				"mock_surname", 
+				"mock_email@gmail.com", 
+				"MM00CK", 
+				new String[]{"Mock101", "Mock102"}, 
+				"TUT-123");
+		
+		String tutorJson = mapToJson(tutor);
+		
+		mockMvc.perform(post("/tutors")
+				.contentType(MediaType.APPLICATION_JSON_VALUE)
+				.content(tutorJson))
+		.andDo(print())
+		.andExpect(status().isCreated())
+		.andExpect(MockMvcResultMatchers.jsonPath("$.id", is(4)))
+		.andExpect(MockMvcResultMatchers.jsonPath("$.name", is("mock_name")))
+		.andExpect(MockMvcResultMatchers.jsonPath("$.email", is("mock_email@gmail.com")))
+		.andExpect(MockMvcResultMatchers.jsonPath("$.expertizeAreas[0]", is("Mock101")))
+		.andExpect(MockMvcResultMatchers.jsonPath("$.expertizeAreas[1]", is("Mock102")));
+		
+		verify(tutorsService, times(1)).addTutor(any());
 	}
 	
 }
