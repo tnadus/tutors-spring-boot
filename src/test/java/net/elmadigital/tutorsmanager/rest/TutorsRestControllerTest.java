@@ -8,11 +8,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.RequestBuilder;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.web.bind.MethodArgumentNotValidException;
+
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -20,11 +17,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import javax.naming.NameNotFoundException;
+
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 
 import net.elmadigital.tutorsmanager.dao.TutorsDAO;
 import net.elmadigital.tutorsmanager.exception.TutorNotFoundException;
@@ -197,5 +198,50 @@ public class TutorsRestControllerTest {
 		
 		verify(tutorsService, times(1)).updateTutor(any(), anyLong());
 	
+	}
+	
+	@Test
+	public void putNonExistedTutorReturnsNotFound() throws Exception {
+		
+		Tutor tutor = new Tutor(0, "updated john", 
+				"AB12CD", 
+				new String[]{"Mock101", "Mock102"}, 
+				"TUT-123");
+		
+		when(tutorsService.updateTutor(any(), anyLong())).thenThrow(TutorNotFoundException.class);
+		
+		String tutorJson = mapToJson(tutor);
+		
+		mockMvc.perform(put("/tutors/" + tutor.getId())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(tutorJson))
+		.andDo(print())
+		.andExpect(status().isNotFound())
+		.andExpect(MockMvcResultMatchers.jsonPath("$.statusCode", is("NOT_FOUND")))
+		.andExpect(MockMvcResultMatchers.jsonPath("$.message", is("Tutor not found, sorry!")));
+		
+		verify(tutorsService, times(1)).updateTutor(any(), anyLong());
+	}
+	
+	@Test
+	public void deleteValidTutorReturnsOK() throws Exception {
+		
+		mockMvc.perform(delete("/tutors/0"))
+		.andDo(print())
+		.andExpect(status().isOk());
+				
+		verify(tutorsService, times(1)).deleteTutor(anyLong());
+	}
+	
+	@Test
+	public void deleteNonExistedTutorReturnsNotFound() throws Exception {
+		
+		doThrow(TutorNotFoundException.class).when(tutorsService).deleteTutor(anyLong());
+		
+		mockMvc.perform(delete("/tutors/0"))
+		.andDo(print())
+		.andExpect(status().isNotFound());
+				
+		verify(tutorsService, times(1)).deleteTutor(anyLong());
 	}
 }
