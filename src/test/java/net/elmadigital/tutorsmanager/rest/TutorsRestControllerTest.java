@@ -8,6 +8,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
@@ -21,6 +24,7 @@ import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 import net.elmadigital.tutorsmanager.dao.TutorsDAO;
 import net.elmadigital.tutorsmanager.exception.TutorNotFoundException;
@@ -171,4 +175,27 @@ public class TutorsRestControllerTest {
 		verify(tutorsService, times(0)).addTutor(any());
 	}
 	
+	@Test
+	public void putAValidTutorReturnsOK() throws Exception {
+		
+		Tutor tutor = new Tutor(0, "updated john", 
+				"AB12CD", 
+				new String[]{"Mock101", "Mock102"}, 
+				"TUT-123");
+		
+		when(tutorsService.updateTutor(any(), anyLong())).thenReturn(tutor);
+		
+		String tutorJson = mapToJson(tutor);
+		
+		mockMvc.perform(put("/tutors/" + tutor.getId())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(tutorJson))
+		.andDo(print())
+		.andExpect(status().isOk())
+		.andExpect(MockMvcResultMatchers.jsonPath("$.id", is(0)))
+		.andExpect(MockMvcResultMatchers.jsonPath("$.name", is("updated john")));
+		
+		verify(tutorsService, times(1)).updateTutor(any(), anyLong());
+	
+	}
 }
