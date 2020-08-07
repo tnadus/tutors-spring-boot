@@ -56,10 +56,11 @@ public class TutorsRestController {
 		tutorsService.deleteTutor(id);
 	}
 	
-	@GetMapping("/tutors/{name}/{surname}")
+	@GetMapping("/tutors/{name}/{tutCode}")
 	@ResponseStatus(HttpStatus.OK)
-	public List<Tutor> getTutorsByNameAndSurname(@PathVariable("name") String name, @PathVariable("surname") String surname) {
-		return tutorsService.getTutorsByNameAndSurname(name, surname);
+	public List<Tutor> getTutorsByNameAndCode(@Valid @PathVariable("name") String name, 
+			@Valid @PathVariable("tutCode") String code) {
+		return tutorsService.getTutorsByNameAndCode(name, code);
 	}
 	
 }

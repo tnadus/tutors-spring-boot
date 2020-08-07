@@ -16,10 +16,10 @@ import net.elmadigital.tutorsmanager.model.Tutor;
 public class TutorsDAO {
 
 	public static final List<Tutor> TUTORS = new ArrayList<>(Arrays.asList(
-			new Tutor(0, "John", "Cooper", "john_cooper@gmail.com", "AB12CD", new String[]{"iOS", "Android", "Java"}, "TUT-001"),
-			new Tutor(1, "Victor", "Palmer", "victorpalmer@yahoo.com", "WW99AA", new String[]{"Java", "Spring"}, "TUT-211"), 
-			new Tutor(2, "Sally", "Simson", "sally_sims@yahoo.com", "XX55YY", new String[]{"Word", "Excel"}, "TUT-591"),
-			new Tutor(3, "Ali", "Tatar", "alitatar@gmail.com", "OO11PP", new String[]{"Oracle", "Java"}, "TUT-999")));
+			new Tutor(0, "John", "AB12CD", new String[]{"iOS", "Android", "Java"}, "TUT-001"),
+			new Tutor(1, "Victor", "WW99AA", new String[]{"Java", "Spring"}, "TUT-211"), 
+			new Tutor(2, "Sally", "XX55YY", new String[]{"Word", "Excel"}, "TUT-591"),
+			new Tutor(3, "Ali", "OO11PP", new String[]{"Oracle", "Java"}, "TUT-999")));
 	
 	public List<Tutor> getAllTutors() {
 		return TUTORS;
@@ -45,8 +45,6 @@ public class TutorsDAO {
 	public Tutor updateTutor(Tutor tutor, long id) {
 		Tutor tutorFound = getTutor(id);
 		tutorFound.setName(tutor.getName());
-		tutorFound.setSurname(tutor.getSurname());
-		tutorFound.setEmail(tutor.getEmail());
 		tutorFound.setExpertizeAreas(tutor.getExpertizeAreas());
 		return tutorFound;
 	}
@@ -56,9 +54,9 @@ public class TutorsDAO {
 		TUTORS.remove(tutor);
 	}
 
-	public List<Tutor> getTutorsByNameAndSurname(String name, String surname) {		
+	public List<Tutor> getTutorsByNameAndCode(String name, String code) {		
 		return Optional.of(TUTORS.stream()
-                .filter(tut -> (tut.getName().equalsIgnoreCase(name)) && (tut.getSurname().equalsIgnoreCase(surname)))
+                .filter(tut -> (tut.getName().equalsIgnoreCase(name)) && (tut.getTutCode().equalsIgnoreCase(code)))
                 .collect(Collectors.toList()))
                 .filter(list -> !list.isEmpty())
                 .orElseThrow(TutorNotFoundException::new);

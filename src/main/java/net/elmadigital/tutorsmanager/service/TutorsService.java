@@ -34,8 +34,8 @@ public class TutorsService {
 		tutorDAO.deleteTutor(id);		
 	}
 
-	public List<Tutor> getTutorsByNameAndSurname(String name, String surname) {
-		return tutorDAO.getTutorsByNameAndSurname(name, surname);
+	public List<Tutor> getTutorsByNameAndCode(String name, String code) {
+		return tutorDAO.getTutorsByNameAndCode(name, code);
 	}
 
 }

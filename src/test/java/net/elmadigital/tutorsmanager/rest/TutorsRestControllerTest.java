@@ -57,7 +57,8 @@ public class TutorsRestControllerTest {
 		.andExpect(status().isOk())
 		.andExpect(MockMvcResultMatchers.jsonPath("$.length()", is(4)))
 	    .andExpect(MockMvcResultMatchers.jsonPath("$.[0].name", is("John")))
-		.andExpect(MockMvcResultMatchers.jsonPath("$.[1].email", is("victorpalmer@yahoo.com")));
+	    .andExpect(MockMvcResultMatchers.jsonPath("$.[1].postcode", is("WW99AA")))
+		.andExpect(MockMvcResultMatchers.jsonPath("$.[2].tutCode", is("TUT-591")));
 		
 		verify(tutorsService, times(1)).getAllTutors();		
 	}
@@ -92,8 +93,6 @@ public class TutorsRestControllerTest {
 	public void postNonExistedValidTutorReturnsHttpCreated() throws Exception {
 		
 		Tutor tutor = new Tutor(4, "mock_name", 
-				"mock_surname", 
-				"mock_email@gmail.com", 
 				"MM00CK", 
 				new String[]{"Mock101", "Mock102"}, 
 				"TUT-123");
@@ -107,7 +106,6 @@ public class TutorsRestControllerTest {
 		.andExpect(status().isCreated())
 		.andExpect(MockMvcResultMatchers.jsonPath("$.id", is(4)))
 		.andExpect(MockMvcResultMatchers.jsonPath("$.name", is("mock_name")))
-		.andExpect(MockMvcResultMatchers.jsonPath("$.email", is("mock_email@gmail.com")))
 		.andExpect(MockMvcResultMatchers.jsonPath("$.expertizeAreas[0]", is("Mock101")))
 		.andExpect(MockMvcResultMatchers.jsonPath("$.expertizeAreas[1]", is("Mock102")));
 		
@@ -118,8 +116,6 @@ public class TutorsRestControllerTest {
 	public void postNonExistedEmptyNameTutorThrowsMethodArgumentNotValidException() throws Exception {
 		
 		Tutor tutor = new Tutor(4, "", 
-				"mock_surname", 
-				"mock_email@gmail.com", 
 				"MM00CK", 
 				new String[]{"Mock101", "Mock102"}, 
 				"TUT-123");
@@ -139,11 +135,29 @@ public class TutorsRestControllerTest {
 	public void postNonExistedInvalidPostcodeTutorThrowsMethodArgumentNotValidException() throws Exception {
 		
 		Tutor tutor = new Tutor(4, "", 
-				"mock_surname", 
-				"mock_email@gmail.com", 
 				"ABC00", 
 				new String[]{"Mock101", "Mock102"}, 
 				"TUT-123");
+		
+		String tutorJson = mapToJson(tutor);
+		mockMvc.perform(post("/tutors")
+				.contentType(MediaType.APPLICATION_JSON_VALUE)
+				.content(tutorJson))
+		.andDo(print())
+		.andExpect(status().isBadRequest())
+		.andExpect(MockMvcResultMatchers.jsonPath("$").exists())
+		.andExpect(MockMvcResultMatchers.jsonPath("$.statusCode", is("BAD_REQUEST")));
+				
+		verify(tutorsService, times(0)).addTutor(any());
+	}
+	
+	@Test
+	public void postNonExistedInvalidTutcodeTutorThrowsMethodArgumentNotValidException() throws Exception {
+		
+		Tutor tutor = new Tutor(4, "", 
+				"MM00CK", 
+				new String[]{"Mock101", "Mock102"}, 
+				"ABC-123");
 		
 		String tutorJson = mapToJson(tutor);
 		mockMvc.perform(post("/tutors")
