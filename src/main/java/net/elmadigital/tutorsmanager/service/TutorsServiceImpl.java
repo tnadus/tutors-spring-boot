@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import net.elmadigital.tutorsmanager.dao.TutorsDAO;
-import net.elmadigital.tutorsmanager.dao.TutorsDAOH2;
 import net.elmadigital.tutorsmanager.model.Tutor;
 
 @Service
@@ -40,5 +39,4 @@ public class TutorsServiceImpl implements TutorsService {
 	public List<Tutor> getTutorsByNameAndCode(String name, String code) {
 		return tutorDAO.getTutorsByNameAndCode(name, code);
 	}
-
 }
