@@ -18,8 +18,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import javax.naming.NameNotFoundException;
-
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -28,6 +26,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 
 import net.elmadigital.tutorsmanager.dao.TutorsDAO;
+import net.elmadigital.tutorsmanager.dao.TutorsDAOArray;
 import net.elmadigital.tutorsmanager.exception.TutorNotFoundException;
 import net.elmadigital.tutorsmanager.model.Tutor;
 import net.elmadigital.tutorsmanager.service.TutorsService;
@@ -55,7 +54,7 @@ public class TutorsRestControllerTest {
 	@Test
 	public void getAllTutorsShouldReturnTutors() throws Exception {
 		
-		when(tutorsService.getAllTutors()).thenReturn(TutorsDAO.TUTORS);
+		when(tutorsService.getAllTutors()).thenReturn(TutorsDAOArray.TUTORS);
 		
 		mockMvc.perform(get("/tutors"))
 		.andDo(print())
@@ -71,7 +70,7 @@ public class TutorsRestControllerTest {
 	@Test
 	public void getTutorReturnsATutor() throws Exception {
 		
-		when(tutorsService.getTutor(anyLong())).thenReturn(TutorsDAO.TUTORS.get(0));
+		when(tutorsService.getTutor(anyLong())).thenReturn(TutorsDAOArray.TUTORS.get(0));
 		
 		mockMvc.perform(get("/tutors/0"))
 		.andDo(print())
@@ -99,7 +98,6 @@ public class TutorsRestControllerTest {
 		
 		Tutor tutor = new Tutor(4, "mock_name", 
 				"MM00CK", 
-				new String[]{"Mock101", "Mock102"}, 
 				"TUT-123");
 		
 		String tutorJson = mapToJson(tutor);
@@ -122,7 +120,6 @@ public class TutorsRestControllerTest {
 		
 		Tutor tutor = new Tutor(4, "", 
 				"MM00CK", 
-				new String[]{"Mock101", "Mock102"}, 
 				"TUT-123");
 		
 		String tutorJson = mapToJson(tutor);
@@ -141,7 +138,6 @@ public class TutorsRestControllerTest {
 		
 		Tutor tutor = new Tutor(4, "", 
 				"ABC00", 
-				new String[]{"Mock101", "Mock102"}, 
 				"TUT-123");
 		
 		String tutorJson = mapToJson(tutor);
@@ -161,7 +157,6 @@ public class TutorsRestControllerTest {
 		
 		Tutor tutor = new Tutor(4, "", 
 				"MM00CK", 
-				new String[]{"Mock101", "Mock102"}, 
 				"ABC-123");
 		
 		String tutorJson = mapToJson(tutor);
@@ -180,8 +175,7 @@ public class TutorsRestControllerTest {
 	public void putAValidTutorReturnsOK() throws Exception {
 		
 		Tutor tutor = new Tutor(0, "updated john", 
-				"AB12CD", 
-				new String[]{"Mock101", "Mock102"}, 
+				"AB12CD",  
 				"TUT-123");
 		
 		when(tutorsService.updateTutor(any(), anyLong())).thenReturn(tutor);
@@ -205,7 +199,6 @@ public class TutorsRestControllerTest {
 		
 		Tutor tutor = new Tutor(0, "updated john", 
 				"AB12CD", 
-				new String[]{"Mock101", "Mock102"}, 
 				"TUT-123");
 		
 		when(tutorsService.updateTutor(any(), anyLong())).thenThrow(TutorNotFoundException.class);

@@ -1,23 +1,33 @@
 package net.elmadigital.tutorsmanager.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
 import net.elmadigital.tutorsmanager.validator.TutCode;
 
+@Entity
+@Table(name = "TUTORS")
 public class Tutor {
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
 	@NotEmpty(message = "Name should not be empty")
 	private String name;
 	
-	private String[] expertizeAreas;
 	
 	@Pattern(regexp = "^[a-zA-Z0-9]{6}", message = "postcode should be 6chars/digits")
 	private String postcode;
 	
 	@TutCode
+	@Column(name = "tutcode")
 	private String tutCode;
 	
 	//Constructors
@@ -27,13 +37,11 @@ public class Tutor {
 	public Tutor(long id, 
 			String name, 
 			String postcode,
-			String[] expertizeAreas,
 			String tutCode) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.postcode = postcode;
-		this.expertizeAreas = expertizeAreas;
 		this.tutCode = tutCode;
 	}
 	
@@ -53,14 +61,6 @@ public class Tutor {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public String[] getExpertizeAreas() {
-		return expertizeAreas;
-	}
-
-	public void setExpertizeAreas(String[] expertizeAreas) {
-		this.expertizeAreas = expertizeAreas;
 	}
 		
 	public String getPostcode() {
