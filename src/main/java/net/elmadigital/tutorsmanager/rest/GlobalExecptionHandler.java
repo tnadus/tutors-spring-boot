@@ -30,7 +30,13 @@ public class GlobalExecptionHandler {
 	
 	@ExceptionHandler
 	public final ResponseEntity<TutorResponseError> handleTutorArgumentNotValidException(MethodArgumentNotValidException exc) {
-		TutorResponseError error = new TutorResponseError(HttpStatus.BAD_REQUEST, exc.getMessage(), System.currentTimeMillis());
+		
+		StringBuilder strErrorBuilder = new StringBuilder("invalid params -> ");
+		exc.getBindingResult().getFieldErrors().forEach(fieldError -> {
+			strErrorBuilder.append(fieldError.getRejectedValue() + " - " + fieldError.getField());
+         });
+		
+		TutorResponseError error = new TutorResponseError(HttpStatus.BAD_REQUEST, strErrorBuilder.toString(), System.currentTimeMillis());
 		return new ResponseEntity<TutorResponseError>(error, error.getStatusCode());
 	}
 
