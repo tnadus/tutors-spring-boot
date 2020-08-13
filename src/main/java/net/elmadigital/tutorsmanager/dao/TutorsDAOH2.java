@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import net.elmadigital.tutorsmanager.exception.TutorAlreadyExistedException;
 import net.elmadigital.tutorsmanager.exception.TutorNotFoundException;
 import net.elmadigital.tutorsmanager.model.Tutor;
 
@@ -13,7 +14,7 @@ public class TutorsDAOH2 implements TutorsDAO {
 
 	@Autowired
 	TutorsRepository tutorsRepository;
-	
+
 	@Override
 	public List<Tutor> getAllTutors() {
 		return tutorsRepository.findAll();
@@ -26,25 +27,31 @@ public class TutorsDAOH2 implements TutorsDAO {
 
 	@Override
 	public void addTutor(Tutor tutor) {
-		// TODO Auto-generated method stub
+		if (tutorsRepository.findByTutCode(tutor.getTutCode()).isPresent()) {
+			throw new TutorAlreadyExistedException();
+		}
+		tutorsRepository.save(tutor);
 	}
 
 	@Override
 	public Tutor updateTutor(Tutor tutor, long id) {
-		// TODO Auto-generated method stub
-		return null;
+		Tutor foundTutor = getTutor(id);
+		foundTutor.setName(tutor.getName());
+		foundTutor.setPostcode(tutor.getPostcode());
+		foundTutor.setTutCode(tutor.getTutCode());
+		tutorsRepository.save(foundTutor);
+		return foundTutor;
 	}
 
 	@Override
 	public void deleteTutor(long id) {
-		// TODO Auto-generated method stub
-
+		Tutor foundTutor = getTutor(id);
+		tutorsRepository.delete(foundTutor);
 	}
 
 	@Override
 	public List<Tutor> getTutorsByNameAndCode(String name, String code) {
-		// TODO Auto-generated method stub
-		return null;
+		return tutorsRepository.findByNameAndPostcode(name, code);
 	}
 
 }
