@@ -109,8 +109,7 @@ public class TutorsRestControllerTest {
 		.andExpect(status().isCreated())
 		.andExpect(MockMvcResultMatchers.jsonPath("$.id", is(4)))
 		.andExpect(MockMvcResultMatchers.jsonPath("$.name", is("mock_name")))
-		.andExpect(MockMvcResultMatchers.jsonPath("$.expertizeAreas[0]", is("Mock101")))
-		.andExpect(MockMvcResultMatchers.jsonPath("$.expertizeAreas[1]", is("Mock102")));
+		.andExpect(MockMvcResultMatchers.jsonPath("$.tutCode", is("TUT-123")));
 		
 		verify(tutorsService, times(1)).addTutor(any());
 	}
