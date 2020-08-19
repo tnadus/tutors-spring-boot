@@ -3,6 +3,7 @@ package net.elmadigital.tutorsmanager.dao;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 import net.elmadigital.tutorsmanager.exception.TutorAlreadyExistedException;
@@ -10,6 +11,7 @@ import net.elmadigital.tutorsmanager.exception.TutorNotFoundException;
 import net.elmadigital.tutorsmanager.model.Tutor;
 
 @Repository(value = "daoH2")
+@Profile(value = "application-dev")
 public class TutorsDAOH2 implements TutorsDAO {
 
 	@Autowired

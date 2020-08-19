@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 import net.elmadigital.tutorsmanager.exception.TutorAlreadyExistedException;
@@ -13,6 +14,7 @@ import net.elmadigital.tutorsmanager.exception.TutorNotFoundException;
 import net.elmadigital.tutorsmanager.model.Tutor;
 
 @Repository(value = "daoArray")
+@Profile(value = "default")
 public class TutorsDAOArray implements TutorsDAO {
 
 	public static final List<Tutor> TUTORS = new ArrayList<>(Arrays.asList(

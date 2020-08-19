@@ -3,7 +3,6 @@ package net.elmadigital.tutorsmanager.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import net.elmadigital.tutorsmanager.dao.TutorsDAO;
@@ -13,7 +12,6 @@ import net.elmadigital.tutorsmanager.model.Tutor;
 public class TutorsServiceImpl implements TutorsService {
 	
 	@Autowired
-	@Qualifier(value = "daoH2")
 	private TutorsDAO tutorDAO;
 	
 	public List<Tutor> getAllTutors() {
